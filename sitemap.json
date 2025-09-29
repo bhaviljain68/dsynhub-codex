@@ -1,0 +1,171 @@
+{
+  "site": "https://mydomain.com",
+  "pages": [
+    {
+      "title": "Home",
+      "route": "/",
+      "astroFile": "src/pages/index.astro",
+      "legacySource": "parallax-showcase.html",
+      "group": "top"
+    },
+    {
+      "title": "Case Study",
+      "route": "/case-study",
+      "astroFile": "src/pages/case-study.astro",
+      "legacySource": "personal-card.html",
+      "group": "top"
+    },
+    {
+      "title": "About Us",
+      "route": "/about-us",
+      "astroFile": "src/pages/about-us.astro",
+      "legacySource": "about-us.html",
+      "group": "top"
+    },
+
+    {
+      "title": "Branding",
+      "route": "/services/branding",
+      "astroFile": "src/pages/services/branding.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/branding-portfolio"
+    },
+    {
+      "title": "Advertising",
+      "route": "/services/advertising",
+      "astroFile": "src/pages/services/advertising.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/advertising-portfolio"
+    },
+    {
+      "title": "Celebrity Canvas",
+      "route": "/services/celebrity-canvas",
+      "astroFile": "src/pages/services/celebrity-canvas.astro",
+      "legacySource": "six-columns-portfolio-wide.html",
+      "group": "services",
+      "nextProject": null
+    },
+    {
+      "title": "Influencer Marketing",
+      "route": "/services/influencer-marketing",
+      "astroFile": "src/pages/services/influencer-marketing.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/influencer-marketing-portfolio"
+    },
+    {
+      "title": "Digital Marketing",
+      "route": "/services/digital-marketing",
+      "astroFile": "src/pages/services/digital-marketing.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/digital-marketing-portfolio"
+    },
+    {
+      "title": "Film",
+      "route": "/services/film",
+      "astroFile": "src/pages/services/film.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/film-portfolio"
+    },
+    {
+      "title": "Photography & Videography",
+      "route": "/services/photography-videography",
+      "astroFile": "src/pages/services/photography-videography.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/photography-videography-portfolio"
+    },
+    {
+      "title": "Code & Creativity",
+      "route": "/services/code-creativity",
+      "astroFile": "src/pages/services/code-creativity.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/code-creativity-portfolio"
+    },
+    {
+      "title": "Print And Production",
+      "route": "/services/print-production",
+      "astroFile": "src/pages/services/print-production.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/print-production-portfolio"
+    },
+    {
+      "title": "Events & Exhibition",
+      "route": "/services/events-exhibition",
+      "astroFile": "src/pages/services/events-exhibition.astro",
+      "legacySource": "branding-project-4.html",
+      "group": "services",
+      "nextProject": "/portfolio/events-exhibition-portfolio"
+    },
+
+    {
+      "title": "Branding Portfolio",
+      "route": "/portfolio/branding-portfolio",
+      "astroFile": "src/pages/portfolio/branding-portfolio.astro",
+      "legacySource": "two-columns-portfolio.html",
+      "group": "portfolio"
+    },
+    {
+      "title": "Advertising Portfolio",
+      "route": "/portfolio/advertising-portfolio",
+      "astroFile": "src/pages/portfolio/advertising-portfolio.astro",
+      "legacySource": "three-columns-portfolio.html",
+      "group": "portfolio"
+    },
+    {
+      "title": "Influencer Marketing Portfolio",
+      "route": "/portfolio/influencer-marketing-portfolio",
+      "astroFile": "src/pages/portfolio/influencer-marketing-portfolio.astro",
+      "legacySource": "four-columns-portfolio.html",
+      "group": "portfolio"
+    },
+    {
+      "title": "Digital Marketing Portfolio",
+      "route": "/portfolio/digital-marketing-portfolio",
+      "astroFile": "src/pages/portfolio/digital-marketing-portfolio.astro",
+      "legacySource": "two-columns-portfolio.html",
+      "group": "portfolio"
+    },
+    {
+      "title": "Film Portfolio",
+      "route": "/portfolio/film-portfolio",
+      "astroFile": "src/pages/portfolio/film-portfolio.astro",
+      "legacySource": "two-columns-portfolio.html",
+      "group": "portfolio"
+    },
+    {
+      "title": "Photography & Videography Portfolio",
+      "route": "/portfolio/photography-videography-portfolio",
+      "astroFile": "src/pages/portfolio/photography-videography-portfolio.astro",
+      "legacySource": "four-columns-portfolio.html",
+      "group": "portfolio"
+    },
+    {
+      "title": "Code & Creativity Portfolio",
+      "route": "/portfolio/code-creativity-portfolio",
+      "astroFile": "src/pages/portfolio/code-creativity-portfolio.astro",
+      "legacySource": "two-columns-portfolio.html",
+      "group": "portfolio"
+    },
+    {
+      "title": "Print And Production Portfolio",
+      "route": "/portfolio/print-production-portfolio",
+      "astroFile": "src/pages/portfolio/print-production-portfolio.astro",
+      "legacySource": "three-columns-portfolio.html",
+      "group": "portfolio"
+    },
+    {
+      "title": "Events & Exhibition Portfolio",
+      "route": "/portfolio/events-exhibition-portfolio",
+      "astroFile": "src/pages/portfolio/events-exhibition-portfolio.astro",
+      "legacySource": "three-columns-portfolio.html",
+      "group": "portfolio"
+    }
+  ]
+}
