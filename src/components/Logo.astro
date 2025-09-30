@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+import logoDark from '@/assets/img/logo-blck.png';
+import logoLight from '@/assets/img/logo-white.png';
+
+interface Props {
+  variant?: 'dark' | 'light';
+  class?: string;
+  title?: string;
+}
+
+const {
+  variant = 'dark',
+  class: className = '',
+  title = 'Dsynhub Codex logo',
+} = Astro.props as Props & { class?: string };
+
+const src = variant === 'light' ? logoLight : logoDark;
+---
+<span class={`inline-flex items-center ${className}`.trim()}>
+  <Image
+    src={src}
+    alt="Dsynhub Codex"
+    widths={[160, 200, 268]}
+    sizes="(max-width: 768px) 160px, 200px"
+    formats={['avif', 'webp', 'png']}
+    loading="eager"
+    decoding="async"
+    class="h-full w-auto"
+    title={title}
+  />
+</span>
