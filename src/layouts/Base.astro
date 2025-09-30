@@ -1,0 +1,34 @@
+---
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import '@/styles/main.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'Dsynhub Codex', description = 'Astro + Tailwind rebuild guided by the legacy Struktur theme.' } =
+  Astro.props as Props;
+
+const currentPath = Astro.url.pathname;
+---
+<html lang="en" class="bg-brand-surface text-brand-ink">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preload" href="/fonts/roboto-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/roboto-700.woff2" as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-screen flex-col bg-brand-surface text-brand-ink">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <Header currentPath={currentPath} />
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
