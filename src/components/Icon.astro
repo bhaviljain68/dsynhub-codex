@@ -1,0 +1,63 @@
+---
+import ArrowBack from '@/icons/arrow-back.svg?component';
+import ArrowDown from '@/icons/arrow-down.svg?component';
+import ArrowForward from '@/icons/arrow-forward.svg?component';
+import ArrowUp from '@/icons/arrow-up.svg?component';
+import Close from '@/icons/close.svg?component';
+import Menu from '@/icons/menu.svg?component';
+import Play from '@/icons/play.svg?component';
+
+type IconComponent = typeof ArrowBack;
+
+const iconMap = {
+  'arrow-back': ArrowBack,
+  'arrow-forward': ArrowForward,
+  'arrow-down': ArrowDown,
+  'arrow-up': ArrowUp,
+  close: Close,
+  menu: Menu,
+  play: Play,
+} satisfies Record<string, IconComponent>;
+
+const aliases = {
+  'arrow-left': 'arrow-back',
+  'arrow-right': 'arrow-forward',
+  'chevron-left': 'arrow-back',
+  'chevron-right': 'arrow-forward',
+  'chevron-down': 'arrow-down',
+  'chevron-up': 'arrow-up',
+} as const;
+
+type IconName = keyof typeof iconMap | keyof typeof aliases;
+
+interface Props {
+  name: IconName;
+  size?: number | string;
+  class?: string;
+  title?: string;
+}
+
+const {
+  name,
+  size = 20,
+  class: className = '',
+  title,
+} = Astro.props as Props;
+
+const resolvedName = (name in aliases ? aliases[name as keyof typeof aliases] : name) as keyof typeof iconMap;
+const Component = iconMap[resolvedName];
+
+if (!Component) {
+  throw new Error(`Icon \\"${name}\\" is not available.`);
+}
+
+const resolvedSize = typeof size === 'number' ? `${size}px` : size;
+const ariaProps = title
+  ? ({ role: 'img', 'aria-label': title } as const)
+  : ({ role: 'presentation', 'aria-hidden': 'true' } as const);
+---
+<Component
+  class:list={["inline-block", className]}
+  style={`width: ${resolvedSize}; height: ${resolvedSize};`}
+  {...ariaProps}
+/>
