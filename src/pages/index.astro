@@ -1,0 +1,28 @@
+---
+import '../styles/global.css';
+
+const pageTitle = 'Dsynhub Codex';
+const pageDescription = 'Astro project scaffold with Tailwind CSS integration.';
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+  </head>
+  <body class="flex min-h-screen items-center justify-center bg-slate-100">
+    <main class="mx-auto w-full max-w-xl rounded-2xl bg-white p-10 shadow-lg">
+      <h1 class="text-3xl font-semibold tracking-tight text-slate-900">
+        {pageTitle}
+      </h1>
+      <p class="mt-4 text-base leading-relaxed text-slate-600">
+        {pageDescription}
+      </p>
+      <p class="mt-6 text-sm text-slate-500">
+        Start building pages by editing <code>src/pages/index.astro</code> and wiring
+        components under <code>src/</code>.
+      </p>
+    </main>
+  </body>
+</html>
