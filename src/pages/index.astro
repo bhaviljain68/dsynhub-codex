@@ -1,28 +1,27 @@
 ---
-import '../styles/global.css';
-
-const pageTitle = 'Dsynhub Codex';
-const pageDescription = 'Astro project scaffold with Tailwind CSS integration.';
+import BaseLayout from '@/layouts/Base.astro';
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={pageDescription} />
-  </head>
-  <body class="flex min-h-screen items-center justify-center bg-slate-100">
-    <main class="mx-auto w-full max-w-xl rounded-2xl bg-white p-10 shadow-lg">
-      <h1 class="text-3xl font-semibold tracking-tight text-slate-900">
-        {pageTitle}
+<BaseLayout title="Dsynhub Codex" description="Design system foundation for the Struktur to Astro rebuild.">
+  <section class="mx-auto flex w-full max-w-4xl flex-col gap-8 px-5 py-24 sm:px-6 lg:px-8">
+    <p class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-primary">Phase 2 &middot; Design System</p>
+    <div class="space-y-6">
+      <h1 class="text-4xl font-semibold uppercase leading-tight tracking-tight text-brand-ink sm:text-5xl">
+        Crafting the visual language for every upcoming page.
       </h1>
-      <p class="mt-4 text-base leading-relaxed text-slate-600">
-        {pageDescription}
+      <p class="text-base leading-relaxed text-brand-muted md:text-lg">
+        Tailwind tokens, self-hosted typography, and a reusable layout shell are now in place.
+        This foundation mirrors the Struktur palette while giving us modern controls for building the new Dsynhub experience in Astro.
       </p>
-      <p class="mt-6 text-sm text-slate-500">
-        Start building pages by editing <code>src/pages/index.astro</code> and wiring
-        components under <code>src/</code>.
-      </p>
-    </main>
-  </body>
-</html>
+      <div class="flex flex-wrap items-center gap-4 pt-4 text-xs uppercase tracking-[0.28em] text-brand-muted">
+        <span class="inline-flex items-center gap-2 rounded-full border border-brand-border/60 px-4 py-2">
+          <span class="h-2 w-2 rounded-full bg-brand-primary" aria-hidden="true" />
+          Roboto &middot; 400 / 700
+        </span>
+        <span class="inline-flex items-center gap-2 rounded-full border border-brand-border/60 px-4 py-2">
+          <span class="h-2 w-2 rounded-full bg-brand-accent" aria-hidden="true" />
+          Palette synced from Struktur
+        </span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

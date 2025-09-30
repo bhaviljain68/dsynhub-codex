@@ -1,0 +1,47 @@
+---
+import { contactEmail, footerNav, primaryNav } from '@/data/navigation';
+
+const year = new Date().getFullYear();
+---
+<footer class="bg-brand-ink text-white">
+  <div class="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-12 md:flex-row md:justify-between">
+      <div class="max-w-xl space-y-4">
+        <p class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-accent">Creative Momentum</p>
+        <h2 class="text-3xl font-semibold uppercase tracking-tight text-white md:text-4xl">Where design, story, and tech align.</h2>
+        <p class="text-sm leading-relaxed text-white/70">
+          Phase two lays the groundwork for the refreshed Dsynhub experience—brand colors, typography, and layout scaffolding that will support every upcoming page build.
+        </p>
+      </div>
+      <div class="grid gap-10 text-sm uppercase tracking-[0.24em] text-white/70 sm:grid-cols-2 md:text-xs">
+        <div>
+          <h3 class="text-xs font-semibold text-white">Navigate</h3>
+          <ul class="mt-4 space-y-2">
+            {primaryNav.map((link) => (
+              <li>
+                <a class="hover:text-brand-accent" href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold text-white">Featured Services</h3>
+          <ul class="mt-4 space-y-2">
+            {footerNav.map((link) => (
+              <li>
+                <a class="hover:text-brand-accent" href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-16 flex flex-col gap-6 border-t border-white/10 pt-6 text-xs uppercase tracking-[0.28em] text-white/60 sm:flex-row sm:items-center sm:justify-between">
+      <p>&copy; {year} Dsynhub Codex. All rights reserved.</p>
+      <a class="inline-flex items-center gap-3 text-white transition hover:text-brand-accent" href={`mailto:${contactEmail}`}>
+        <span class="h-2 w-2 rounded-full bg-brand-accent" aria-hidden="true" />
+        {contactEmail}
+      </a>
+    </div>
+  </div>
+</footer>

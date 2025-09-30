@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/roboto-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/roboto-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --header-height: 4.5rem;
+    --radius-pill: 999px;
+    --shadow-soft: 0 24px 60px rgba(10, 12, 16, 0.12);
+  }
+
+  html {
+    font-family: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: theme('colors.brand.surface');
+    color: theme('colors.brand.ink');
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-white text-brand-ink antialiased;
+    min-height: 100vh;
+  }
+
+  a {
+    @apply text-brand-ink transition-colors duration-200 ease-out;
+  }
+
+  a:hover,
+  a:focus-visible {
+    @apply text-brand-primary;
+  }
+
+  ::selection {
+    background-color: theme('colors.brand.primary');
+    color: white;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.brand.accent');
+    outline-offset: 2px;
+  }
+
+  img,
+  picture,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-4 focus:z-50 focus:rounded-full focus:bg-brand-primary focus:px-4 focus:py-2 focus:text-xs focus:font-semibold focus:uppercase focus:tracking-[0.3em] focus:text-white;
+  }
+}

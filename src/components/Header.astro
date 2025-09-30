@@ -1,0 +1,71 @@
+---
+import type { NavLink } from '@/data/navigation';
+import { primaryNav } from '@/data/navigation';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props as Props;
+
+const isActive = (link: NavLink) => {
+  const target = link.match ?? link.href;
+  if (target === '/') {
+    return currentPath === '/';
+  }
+  return currentPath === target || currentPath.startsWith(`${target}/`);
+};
+---
+<header class="sticky top-0 z-40 border-b border-brand-border/60 bg-white/85 backdrop-blur">
+  <div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
+    <a href="/" class="group flex items-center gap-3">
+      <span class="flex h-11 w-11 items-center justify-center rounded-full border border-brand-border/80 text-sm font-bold uppercase tracking-[0.32em] text-brand-ink transition hover:border-brand-primary hover:text-brand-primary">
+        DH
+      </span>
+      <span class="hidden flex-col text-xs font-medium uppercase leading-tight tracking-[0.28em] text-brand-muted sm:flex">
+        <span class="text-brand-primary">Dsynhub</span>
+        <span>Codex</span>
+      </span>
+      <span class="sr-only">Dsynhub Codex home</span>
+    </a>
+
+    <nav aria-label="Primary" class="hidden md:block">
+      <ul class="flex items-center gap-6 text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-brand-muted">
+        {primaryNav.map((link) => {
+          const active = isActive(link);
+          return (
+            <li>
+              <a
+                href={link.href}
+                class={`group relative pb-1 transition-colors ${
+                  active ? 'text-brand-primary' : 'text-brand-muted hover:text-brand-primary'
+                }`}
+              >
+                {link.label}
+                <span
+                  aria-hidden="true"
+                  class:list={{
+                    'absolute inset-x-0 -bottom-0.5 h-0.5 origin-left bg-brand-primary transition-transform duration-200 ease-out group-hover:scale-x-100':
+                      true,
+                    'scale-x-100': active,
+                    'scale-x-0': !active,
+                  }}
+                />
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+
+    <button
+      type="button"
+      class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-border/80 text-brand-ink transition hover:border-brand-primary hover:text-brand-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:hidden"
+      aria-label="Open navigation"
+    >
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+</header>
