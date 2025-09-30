@@ -30,10 +30,10 @@
 
 ## Phase 3 — Icons
 
-* [ ] Identify used icons in `/legacy` (Ionicons, etc.).
-* [ ] Extract to inline SVGs under `src/icons/**`.
-* [ ] Build `src/components/Icon.astro` that renders an SVG by `{name}` with `{size}`, `{class}`, `{title}`.
-* [ ] Replace icon font references with `<Icon name="..." />`.
+* [x] Identify used icons in `/legacy` (Ionicons, etc.).
+* [x] Extract to inline SVGs under `src/icons/**`.
+* [x] Build `src/components/Icon.astro` that renders an SVG by `{name}` with `{size}`, `{class}`, `{title}`.
+* [x] Replace icon font references with `<Icon name="..." />`.
 
 ## Phase 4 — Optimized images (astro:assets)
 
