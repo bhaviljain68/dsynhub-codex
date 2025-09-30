@@ -3,17 +3,30 @@ import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import '@/styles/main.css';
 
+type LayoutVariant = 'default' | 'legacy-parallax';
+
 interface Props {
   title?: string;
   description?: string;
+  variant?: LayoutVariant;
 }
 
-const { title = 'Dsynhub Codex', description = 'Astro + Tailwind rebuild guided by the legacy Struktur theme.' } =
-  Astro.props as Props;
+const {
+  title = 'Dsynhub Codex',
+  description = 'Astro + Tailwind rebuild guided by the legacy Struktur theme.',
+  variant = 'default',
+} = Astro.props as Props;
 
 const currentPath = Astro.url.pathname;
+
+const showChrome = variant === 'default';
+const htmlClass = variant === 'legacy-parallax' ? 'bg-white text-brand-ink' : 'bg-brand-surface text-brand-ink';
+const bodyClass =
+  variant === 'legacy-parallax'
+    ? 'flex min-h-screen flex-col bg-white text-brand-ink'
+    : 'flex min-h-screen flex-col bg-brand-surface text-brand-ink';
 ---
-<html lang="en" class="bg-brand-surface text-brand-ink">
+<html lang="en" class={htmlClass}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,12 +36,12 @@ const currentPath = Astro.url.pathname;
     <link rel="preload" href="/fonts/roboto-700.woff2" as="font" type="font/woff2" crossorigin />
     <slot name="head" />
   </head>
-  <body class="flex min-h-screen flex-col bg-brand-surface text-brand-ink">
+  <body class={bodyClass}>
     <a class="skip-link" href="#main-content">Skip to main content</a>
-    <Header currentPath={currentPath} />
+    {showChrome && <Header currentPath={currentPath} />}
     <main id="main-content" class="flex-1">
       <slot />
     </main>
-    <Footer />
+    {showChrome && <Footer />}
   </body>
 </html>

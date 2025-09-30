@@ -1,27 +1,98 @@
 ---
 import BaseLayout from '@/layouts/Base.astro';
+import heroOne from '@/assets/img/home-4-image-1.jpg';
+import heroTwo from '@/assets/img/home-4-image-2.jpg';
+import heroThree from '@/assets/img/home-4-image-3.jpg';
+import heroFour from '@/assets/img/home-4-image-4.jpg';
+import heroFive from '@/assets/img/home-4-image-5.jpg';
+
+const sections = [
+  {
+    id: 'branding',
+    title: 'Branding',
+    categories: ['Editorial', 'Typography', 'Website'],
+    image: heroOne,
+  },
+  {
+    id: 'fashion-photography',
+    title: 'Fashion Photography',
+    categories: ['Editorial', 'Typography', 'Website'],
+    image: heroTwo,
+  },
+  {
+    id: 'see-our-products',
+    title: 'See Our Products',
+    categories: ['Editorial', 'Typography', 'Website'],
+    image: heroThree,
+  },
+  {
+    id: 'app-and-digital',
+    title: 'App & Digital',
+    categories: ['Editorial', 'Typography', 'Website'],
+    image: heroFour,
+  },
+  {
+    id: 'branding-inspiration',
+    title: 'Branding Inspiration',
+    categories: ['Editorial', 'Typography', 'Website'],
+    image: heroFive,
+  },
+];
 ---
-<BaseLayout title="Dsynhub Codex" description="Design system foundation for the Struktur to Astro rebuild.">
-  <section class="mx-auto flex w-full max-w-4xl flex-col gap-8 px-5 py-24 sm:px-6 lg:px-8">
-    <p class="text-xs font-semibold uppercase tracking-[0.32em] text-brand-primary">Phase 2 &middot; Design System</p>
-    <div class="space-y-6">
-      <h1 class="text-4xl font-semibold uppercase leading-tight tracking-tight text-brand-ink sm:text-5xl">
-        Crafting the visual language for every upcoming page.
-      </h1>
-      <p class="text-base leading-relaxed text-brand-muted md:text-lg">
-        Tailwind tokens, self-hosted typography, and a reusable layout shell are now in place.
-        This foundation mirrors the Struktur palette while giving us modern controls for building the new Dsynhub experience in Astro.
-      </p>
-      <div class="flex flex-wrap items-center gap-4 pt-4 text-xs uppercase tracking-[0.28em] text-brand-muted">
-        <span class="inline-flex items-center gap-2 rounded-full border border-brand-border/60 px-4 py-2">
-          <span class="h-2 w-2 rounded-full bg-brand-primary" aria-hidden="true" />
-          Roboto &middot; 400 / 700
-        </span>
-        <span class="inline-flex items-center gap-2 rounded-full border border-brand-border/60 px-4 py-2">
-          <span class="h-2 w-2 rounded-full bg-brand-accent" aria-hidden="true" />
-          Palette synced from Struktur
-        </span>
-      </div>
+<BaseLayout
+  title="Parallax Showcase – Struktur"
+  description="A faithful Tailwind CSS recreation of the Struktur Parallax Showcase."
+  variant="legacy-parallax"
+>
+  <div id="top" class="relative">
+    <header class="pointer-events-none fixed top-0 left-0 right-0 z-20 flex items-center justify-between px-6 py-8 text-white sm:px-10 lg:px-16">
+      <a
+        href="#top"
+        class="pointer-events-auto text-sm font-semibold uppercase tracking-[0.6em] text-white transition hover:opacity-80"
+      >
+        Struktur.
+      </a>
+      <button
+        type="button"
+        class="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/40 transition hover:border-white hover:bg-white/10"
+        aria-label="Open navigation"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
+      </button>
+    </header>
+
+    <nav class="pointer-events-none fixed bottom-16 right-6 z-20 origin-bottom-right -rotate-90 text-[0.65rem] font-semibold uppercase tracking-[0.6em] text-[#e84945] sm:right-10 lg:right-16">
+      <a href="#top" class="pointer-events-auto transition hover:text-white">Back to top</a>
+    </nav>
+
+    <div class="space-y-0">
+      {sections.map((section) => (
+        <section
+          id={section.id}
+          class="relative flex min-h-screen items-stretch justify-center overflow-hidden bg-black text-white"
+        >
+          <div
+            class="absolute inset-0 bg-cover bg-center bg-no-repeat md:bg-fixed"
+            style={{ backgroundImage: `url(${section.image.src})` }}
+            aria-hidden="true"
+          />
+          <div class="absolute inset-0 bg-black/40" aria-hidden="true" />
+
+          <div class="relative z-10 flex w-full max-w-6xl flex-col justify-center gap-10 px-6 py-24 sm:px-10 sm:py-32 lg:px-16">
+            <div class="space-y-6">
+              <h2 class="text-[2.75rem] font-bold uppercase leading-none tracking-tight sm:text-[4rem] lg:text-[5.625rem]">
+                {section.title}
+              </h2>
+              <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.45em] sm:text-sm">
+                <span class="h-px w-16 bg-white" aria-hidden="true" />
+                <span class="whitespace-nowrap">
+                  {section.categories.join(' / ')}
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      ))}
     </div>
-  </section>
+  </div>
 </BaseLayout>
