@@ -39,6 +39,11 @@
     min-height: 100vh;
   }
 
+  body.menu-open {
+    overflow: hidden;
+    touch-action: none;
+  }
+
   a {
     @apply text-brand-ink transition-colors duration-200 ease-out;
   }
@@ -70,5 +75,16 @@
 @layer components {
   .skip-link {
     @apply sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-4 focus:z-50 focus:rounded-full focus:bg-brand-primary focus:px-4 focus:py-2 focus:text-xs focus:font-semibold focus:uppercase focus:tracking-[0.3em] focus:text-white;
+  }
+
+  .parallax-layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: translate3d(0, calc(var(--parallax-offset, 0) * 1px), 0) scale(1.15);
+    will-change: transform;
+    transition: transform 0.35s ease-out;
   }
 }
