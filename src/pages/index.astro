@@ -69,11 +69,14 @@ const sections = [
       {sections.map((section) => (
         <section
           id={section.id}
-          class="relative flex min-h-screen items-stretch justify-start overflow-hidden bg-black text-white">
+          class="relative flex min-h-screen items-stretch justify-start overflow-hidden bg-black text-white"
+          data-parallax-section
+        >
           <div
-            class="absolute inset-0 bg-cover bg-center bg-no-repeat md:bg-fixed"
+            class="parallax-layer"
             style={{ backgroundImage: `url(${section.image.src})` }}
             aria-hidden="true"
+            data-parallax-bg
           />
           <div class="absolute inset-0 bg-black/40" aria-hidden="true" />
 
@@ -95,3 +98,75 @@ const sections = [
     </div>
   </div>
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const sections = Array.from(document.querySelectorAll('[data-parallax-section]'));
+    if (sections.length === 0) return;
+
+    const updateSection = (section) => {
+      const layer = section.querySelector('[data-parallax-bg]');
+      if (!(layer instanceof HTMLElement)) return;
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || 1;
+      const sectionCenter = rect.top + rect.height / 2;
+      const viewportCenter = viewportHeight / 2;
+      const progress = (sectionCenter - viewportCenter) / viewportHeight;
+      const clamped = Math.max(-1, Math.min(1, progress));
+      const offset = clamped * -80;
+      layer.style.setProperty('--parallax-offset', offset.toFixed(2));
+    };
+
+    const supportsObserver = 'IntersectionObserver' in window;
+
+    if (!supportsObserver) {
+      const queueUpdate = () => {
+        window.requestAnimationFrame(() => {
+          sections.forEach((section) => updateSection(section));
+        });
+      };
+
+      window.addEventListener('scroll', queueUpdate, { passive: true });
+      window.addEventListener('resize', queueUpdate);
+      queueUpdate();
+      return;
+    }
+
+    const activeSections = new Set();
+    let raf = 0;
+
+    const flush = () => {
+      raf = 0;
+      activeSections.forEach((section) => updateSection(section));
+    };
+
+    const requestTick = () => {
+      if (raf !== 0) return;
+      raf = window.requestAnimationFrame(flush);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            activeSections.add(entry.target);
+            updateSection(entry.target);
+          } else {
+            activeSections.delete(entry.target);
+          }
+        });
+        requestTick();
+      },
+      { threshold: [0, 0.1, 0.5, 0.9, 1] }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    window.addEventListener('scroll', requestTick, { passive: true });
+    window.addEventListener('resize', () => {
+      activeSections.forEach((section) => updateSection(section));
+    });
+  })();
+</script>

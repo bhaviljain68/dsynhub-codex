@@ -1,8 +1,8 @@
 ---
-import Icon from '@/components/Icon.astro';
 import type { NavLink } from '@/data/navigation';
 import { primaryNav } from '@/data/navigation';
 import Logo from './Logo.astro';
+import MobileMenu from './MobileMenu.astro';
 
 interface Props {
   currentPath: string;
@@ -58,12 +58,6 @@ const isActive = (link: NavLink) => {
       </ul>
     </nav>
 
-    <button
-      type="button"
-      class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-border/80 text-brand-ink transition hover:border-brand-primary hover:text-brand-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent md:hidden"
-      aria-label="Open navigation"
-    >
-      <Icon name="menu" size={20} />
-    </button>
+    <MobileMenu currentPath={currentPath} navLinks={primaryNav} />
   </div>
 </header>
