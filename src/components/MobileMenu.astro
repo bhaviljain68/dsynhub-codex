@@ -81,129 +81,145 @@ const isActive = (link: NavLink) => {
 <script is:inline>
   (() => {
     if (typeof window === 'undefined') return;
-    const menuRoot = document.currentScript?.closest('[data-mobile-menu]');
-    if (!menuRoot) return;
 
-    const trigger = menuRoot.querySelector('[data-menu-trigger]');
-    const overlay = menuRoot.querySelector('[data-menu-overlay]');
-    const closeBtn = menuRoot.querySelector('[data-menu-close]');
-    const backdrop = menuRoot.querySelector('[data-menu-backdrop]');
-    const links = menuRoot.querySelectorAll('[data-menu-link]');
     const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const menus = Array.from(document.querySelectorAll('[data-mobile-menu]'));
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    let lastFocused = null;
-    let isOpen = false;
-    let focusTrapHandler = null;
+    menus.forEach((menuRoot) => {
+      const trigger = menuRoot.querySelector('[data-menu-trigger]');
+      const overlay = menuRoot.querySelector('[data-menu-overlay]');
+      if (!(trigger instanceof HTMLElement) || !(overlay instanceof HTMLElement)) {
+        return;
+      }
 
-    const setExpanded = (value) => {
-      if (trigger instanceof HTMLElement) {
+      const closeButtons = overlay.querySelectorAll('[data-menu-close]');
+      const backdrop = overlay.querySelector('[data-menu-backdrop]');
+      const links = overlay.querySelectorAll('[data-menu-link]');
+
+      let lastFocused = null;
+      let isOpen = false;
+
+      const setExpanded = (value) => {
         trigger.setAttribute('aria-expanded', value ? 'true' : 'false');
-      }
-    };
+      };
 
-    const focusFirstElement = () => {
-      if (!(overlay instanceof HTMLElement)) return;
-      const focusable = overlay.querySelectorAll(focusableSelector);
-      if (focusable.length > 0) {
-        const first = focusable[0];
-        requestAnimationFrame(() => first.focus());
-      }
-    };
+      const applyState = (open) => {
+        overlay.classList.toggle('opacity-0', !open);
+        overlay.classList.toggle('pointer-events-none', !open);
+        overlay.classList.toggle('opacity-100', open);
+        overlay.classList.toggle('pointer-events-auto', open);
+      };
 
-    const removeFocusTrap = () => {
-      if (overlay && focusTrapHandler) {
-        overlay.removeEventListener('keydown', focusTrapHandler);
-        focusTrapHandler = null;
-      }
-    };
-
-    const closeMenu = () => {
-      if (!(overlay instanceof HTMLElement) || !isOpen) return;
-      isOpen = false;
-      overlay.classList.add('opacity-0', 'pointer-events-none');
-      overlay.classList.remove('opacity-100', 'pointer-events-auto');
-      document.body.classList.remove('menu-open');
+      applyState(false);
       setExpanded(false);
-      removeFocusTrap();
-      if (lastFocused instanceof HTMLElement) {
-        lastFocused.focus({ preventScroll: true });
-      } else if (trigger instanceof HTMLElement) {
-        trigger.focus({ preventScroll: true });
-      }
-    };
 
-    const handleFocusTrap = (event) => {
-      if (!(overlay instanceof HTMLElement)) return;
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        closeMenu();
-        return;
-      }
-
-      if (event.key !== 'Tab') return;
-
-      const focusable = Array.from(overlay.querySelectorAll(focusableSelector)).filter(
-        (el) => !el.hasAttribute('disabled') && el.getAttribute('tabindex') !== '-1'
-      );
-
-      if (focusable.length === 0) {
-        event.preventDefault();
-        return;
-      }
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      const active = document.activeElement;
-
-      if (event.shiftKey) {
-        if (active === first || active === overlay) {
-          event.preventDefault();
-          last.focus();
+      const focusFirstElement = () => {
+        const focusable = overlay.querySelectorAll(focusableSelector);
+        if (focusable.length > 0) {
+          const first = focusable[0];
+          requestAnimationFrame(() => {
+            if (first instanceof HTMLElement) {
+              first.focus();
+            }
+          });
         }
-      } else if (active === last) {
+      };
+
+      const trapFocus = (event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeMenu();
+          return;
+        }
+
+        if (event.key !== 'Tab') return;
+
+        const focusable = Array.from(overlay.querySelectorAll(focusableSelector)).filter(
+          (el) => !el.hasAttribute('disabled') && el.getAttribute('tabindex') !== '-1'
+        );
+
+        if (focusable.length === 0) {
+          event.preventDefault();
+          return;
+        }
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+
+        if (event.shiftKey) {
+          if (active === first || active === overlay) {
+            event.preventDefault();
+            if (last instanceof HTMLElement) last.focus();
+          }
+        } else if (active === last) {
+          event.preventDefault();
+          if (first instanceof HTMLElement) first.focus();
+        }
+      };
+
+      const openMenu = () => {
+        if (isOpen) return;
+        isOpen = true;
+        lastFocused = document.activeElement;
+
+        if (prefersReducedMotion.matches) {
+          overlay.classList.remove('transition-opacity');
+        }
+
+        applyState(true);
+        document.body.classList.add('menu-open');
+        setExpanded(true);
+        overlay.addEventListener('keydown', trapFocus);
+        focusFirstElement();
+      };
+
+      const closeMenu = () => {
+        if (!isOpen) return;
+        isOpen = false;
+
+        applyState(false);
+        document.body.classList.remove('menu-open');
+        setExpanded(false);
+        overlay.removeEventListener('keydown', trapFocus);
+
+        if (lastFocused instanceof HTMLElement) {
+          lastFocused.focus({ preventScroll: true });
+        } else {
+          trigger.focus({ preventScroll: true });
+        }
+      };
+
+      trigger.addEventListener('click', (event) => {
         event.preventDefault();
-        first.focus();
+        openMenu();
+      });
+
+      closeButtons.forEach((button) => {
+        button.addEventListener('click', () => closeMenu());
+      });
+
+      if (backdrop instanceof HTMLElement) {
+        backdrop.addEventListener('click', () => closeMenu());
       }
-    };
 
-    const openMenu = () => {
-      if (!(overlay instanceof HTMLElement) || isOpen) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        overlay.classList.remove('transition-opacity');
-      }
-      isOpen = true;
-      lastFocused = document.activeElement;
-      overlay.classList.add('opacity-100', 'pointer-events-auto');
-      overlay.classList.remove('opacity-0', 'pointer-events-none');
-      document.body.classList.add('menu-open');
-      setExpanded(true);
-      focusTrapHandler = handleFocusTrap;
-      overlay.addEventListener('keydown', handleFocusTrap);
-      focusFirstElement();
-    };
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) {
+          closeMenu();
+        }
+      });
 
-    trigger?.addEventListener('click', (event) => {
-      event.preventDefault();
-      openMenu();
-    });
+      links.forEach((link) => {
+        link.addEventListener('click', () => closeMenu());
+      });
 
-    closeBtn?.addEventListener('click', () => closeMenu());
-    backdrop?.addEventListener('click', () => closeMenu());
-
-    overlay?.addEventListener('click', (event) => {
-      if (event.target === overlay) {
-        closeMenu();
-      }
-    });
-
-    links.forEach((link) => {
-      link.addEventListener('click', () => closeMenu());
-    });
-
-    window.addEventListener('keydown', (event) => {
-      if (!isOpen || event.key !== 'Escape') return;
-      event.preventDefault();
-      closeMenu();
+      window.addEventListener('keydown', (event) => {
+        if (isOpen && event.key === 'Escape') {
+          event.preventDefault();
+          closeMenu();
+        }
+      });
     });
   })();
 </script>
