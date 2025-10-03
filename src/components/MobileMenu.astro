@@ -1,0 +1,225 @@
+---
+import Icon from '@/components/Icon.astro';
+import type { NavLink } from '@/data/navigation';
+
+interface Props {
+  currentPath: string;
+  navLinks: NavLink[];
+}
+
+const { currentPath, navLinks } = Astro.props as Props;
+
+const menuId = `mobile-menu-${Math.random().toString(36).slice(2, 8)}`;
+
+const isActive = (link: NavLink) => {
+  const target = link.match ?? link.href;
+  if (target === '/') {
+    return currentPath === '/';
+  }
+  return currentPath === target || currentPath.startsWith(`${target}/`);
+};
+---
+<div class="md:hidden" data-mobile-menu>
+  <button
+    type="button"
+    class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-border/80 text-brand-ink transition hover:border-brand-primary hover:text-brand-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+    aria-label="Open navigation"
+    aria-expanded="false"
+    aria-controls={menuId}
+    data-menu-trigger
+  >
+    <Icon name="menu" size={20} />
+  </button>
+
+  <div
+    id={menuId}
+    class="fixed inset-0 z-50 flex flex-col bg-brand-ink/90 px-6 py-8 text-white opacity-0 pointer-events-none transition-opacity duration-300"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby={`${menuId}-label`}
+    data-menu-overlay
+  >
+    <div class="absolute inset-0 bg-brand-ink/60" aria-hidden="true" data-menu-backdrop></div>
+
+    <div class="relative z-10 mx-auto flex h-full w-full max-w-md flex-col gap-12">
+      <div class="flex items-center justify-between">
+        <span id={`${menuId}-label`} class="text-[0.75rem] font-semibold uppercase tracking-[0.4em] text-white/80">Menu</span>
+        <button
+          type="button"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-brand-accent hover:text-brand-accent"
+          aria-label="Close navigation"
+          data-menu-close
+        >
+          <Icon name="close" size={20} />
+        </button>
+      </div>
+
+      <nav aria-label="Mobile">
+        <ul class="flex flex-col gap-6 text-lg font-semibold uppercase tracking-[0.4em]">
+          {navLinks.map((link) => {
+            const active = isActive(link);
+            return (
+              <li>
+                <a
+                  href={link.href}
+                  class={`block transition-colors duration-200 ${
+                    active ? 'text-brand-accent' : 'text-white hover:text-brand-accent'
+                  }`}
+                  data-menu-link
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    if (typeof window === 'undefined') return;
+
+    const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const menus = Array.from(document.querySelectorAll('[data-mobile-menu]'));
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    menus.forEach((menuRoot) => {
+      const trigger = menuRoot.querySelector('[data-menu-trigger]');
+      const overlay = menuRoot.querySelector('[data-menu-overlay]');
+      if (!(trigger instanceof HTMLElement) || !(overlay instanceof HTMLElement)) {
+        return;
+      }
+
+      const closeButtons = overlay.querySelectorAll('[data-menu-close]');
+      const backdrop = overlay.querySelector('[data-menu-backdrop]');
+      const links = overlay.querySelectorAll('[data-menu-link]');
+
+      let lastFocused = null;
+      let isOpen = false;
+
+      const setExpanded = (value) => {
+        trigger.setAttribute('aria-expanded', value ? 'true' : 'false');
+      };
+
+      const applyState = (open) => {
+        overlay.classList.toggle('opacity-0', !open);
+        overlay.classList.toggle('pointer-events-none', !open);
+        overlay.classList.toggle('opacity-100', open);
+        overlay.classList.toggle('pointer-events-auto', open);
+      };
+
+      applyState(false);
+      setExpanded(false);
+
+      const focusFirstElement = () => {
+        const focusable = overlay.querySelectorAll(focusableSelector);
+        if (focusable.length > 0) {
+          const first = focusable[0];
+          requestAnimationFrame(() => {
+            if (first instanceof HTMLElement) {
+              first.focus();
+            }
+          });
+        }
+      };
+
+      const trapFocus = (event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeMenu();
+          return;
+        }
+
+        if (event.key !== 'Tab') return;
+
+        const focusable = Array.from(overlay.querySelectorAll(focusableSelector)).filter(
+          (el) => !el.hasAttribute('disabled') && el.getAttribute('tabindex') !== '-1'
+        );
+
+        if (focusable.length === 0) {
+          event.preventDefault();
+          return;
+        }
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+
+        if (event.shiftKey) {
+          if (active === first || active === overlay) {
+            event.preventDefault();
+            if (last instanceof HTMLElement) last.focus();
+          }
+        } else if (active === last) {
+          event.preventDefault();
+          if (first instanceof HTMLElement) first.focus();
+        }
+      };
+
+      const openMenu = () => {
+        if (isOpen) return;
+        isOpen = true;
+        lastFocused = document.activeElement;
+
+        if (prefersReducedMotion.matches) {
+          overlay.classList.remove('transition-opacity');
+        }
+
+        applyState(true);
+        document.body.classList.add('menu-open');
+        setExpanded(true);
+        overlay.addEventListener('keydown', trapFocus);
+        focusFirstElement();
+      };
+
+      const closeMenu = () => {
+        if (!isOpen) return;
+        isOpen = false;
+
+        applyState(false);
+        document.body.classList.remove('menu-open');
+        setExpanded(false);
+        overlay.removeEventListener('keydown', trapFocus);
+
+        if (lastFocused instanceof HTMLElement) {
+          lastFocused.focus({ preventScroll: true });
+        } else {
+          trigger.focus({ preventScroll: true });
+        }
+      };
+
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        openMenu();
+      });
+
+      closeButtons.forEach((button) => {
+        button.addEventListener('click', () => closeMenu());
+      });
+
+      if (backdrop instanceof HTMLElement) {
+        backdrop.addEventListener('click', () => closeMenu());
+      }
+
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) {
+          closeMenu();
+        }
+      });
+
+      links.forEach((link) => {
+        link.addEventListener('click', () => closeMenu());
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (isOpen && event.key === 'Escape') {
+          event.preventDefault();
+          closeMenu();
+        }
+      });
+    });
+  })();
+</script>

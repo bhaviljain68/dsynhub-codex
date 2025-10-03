@@ -39,6 +39,11 @@
     min-height: 100vh;
   }
 
+  body.menu-open {
+    overflow: hidden;
+    touch-action: none;
+  }
+
   a {
     @apply text-brand-ink transition-colors duration-200 ease-out;
   }
